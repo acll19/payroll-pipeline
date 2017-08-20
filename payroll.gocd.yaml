@@ -1,0 +1,35 @@
+pipelines:
+  Payroll:
+    group: apis
+    materials:
+      repo:
+        git: https://github.com/exarcol/payroll.git
+        branch: master
+    stages:
+      - Unit_Tests:
+          jobs:
+            run_tests:
+              tasks:
+                - exec:
+                    command: mvn
+                    arguments:
+                      - clean
+                      - test
+      - Create_Uberjar:
+          jobs:
+            compile_to_Ubejar:
+              artifacts:
+                - build:
+                    source: '**/payroll-1.0.war'
+                    destination: target/
+                - build:
+                    source: '**/payroll-1.0-swarm.jar'
+                    destination: target/
+              tasks:
+                - exec:
+                    command: mvn
+                    arguments:
+                      - '-Dmaven.test.skip=true'
+                      - clean
+                      - package
+                      - wildfly-swarm:package
