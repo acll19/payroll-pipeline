@@ -33,3 +33,18 @@ pipelines:
                       - clean
                       - package
                       - wildfly-swarm:package
+      - Upload_to_loc:
+          jobs:
+            upload_to_loc:
+              tasks:
+                - fetch:
+                    stage: Create_Uberjar
+                    job: compile_to_Ubejar
+                    source: target/target/employees-1.0-swarm.jar
+                    destination: app/
+                    is_file: true
+                - exec:
+                    command: sh
+                    arguments:
+                      - -c
+                      - /godata/copy_local.sh  
