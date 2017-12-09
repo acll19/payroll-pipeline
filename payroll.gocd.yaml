@@ -40,11 +40,25 @@ pipelines:
                 - fetch:
                     stage: Create_Uberjar
                     job: compile_to_Ubejar
-                    source: target/target/employees-1.0-swarm.jar
+                    source: target/target/payroll-1.0-swarm.jar
                     destination: app/
                     is_file: true
                 - exec:
                     command: sh
                     arguments:
                       - -c
-                      - /godata/copy_local.sh  
+                      - /godata/pr_copy_local.sh  
+      - Deploy_on_loc:
+          jobs:
+            deploy_on_loc:
+              tasks:
+                - exec:
+                    command: sh
+                    arguments:
+                      - -c
+                      - /godata/pr_stop_server_local.sh
+                - exec:
+                    command: sh
+                    arguments:
+                      - -c
+                      - /godata/pr_deploy_local.sh
